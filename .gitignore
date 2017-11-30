@@ -1,1 +1,6 @@
-/target/
+.tern-project
+.settings
+.project
+.classpath
+/phantomjsdriver.log
+target/
