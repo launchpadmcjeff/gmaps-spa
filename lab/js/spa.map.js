@@ -13,10 +13,15 @@
 /*global $, spa */
 
 spa.map = (function () {
-    var configModule, initModule, initMap, show, showMap, setJqueryMap,
+
+    var configModule, initModule, initMap, show, showMap, setJqueryMap, gmap, gLatLng, gCircle, pollGmapInit,
         configMap = {
             main_html: String()
-            + '<div id="map" style="height: 100%" >'
+            + '<label for="speed">Speed:</label>'
+            + '<input id="speed" type="text">'
+            + '<label for="updFreq">Frequency:</label>'
+            + '<input id="updFreq" type="text">'
+            + '<div id="map" style="/*! height: 100%; */ position: absolute; overflow: hidden;top: 20px;left: 0;right: 0;bottom: 0;" >'
             + '</div>',
 
             settable_map: {
@@ -25,21 +30,22 @@ spa.map = (function () {
         },
         stateMap = {
             $append_target: null,
-            gmap_init_bool: false
+            gmap_init_bool: false,
+            gmap_zoom: 10,
+            gmap_lat: 32.722152,
+            gmap_lon: -117.256908
         },
         jqueryMap = {}
         ;
 
     showMap = function () {
-        var myLatlng, map, c;
-
-        myLatlng = new google.maps.LatLng(32.722152, -117.256908);
-        map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 11,
-            center: myLatlng
+        gLatLng = new google.maps.LatLng(stateMap.gmap_lat, stateMap.gmap_lon);
+        gmap = new google.maps.Map(document.getElementById('map'), {
+            zoom: stateMap.gmap_zoom,
+            center: gLatLng
         });
 
-        map.addListener('click', function (me) {
+        gmap.addListener('click', function (me) {
             console.log("lat " + me.latLng.lat() + " lon: " + me.latLng.lng() + " toString: " + me.latLng.toString() + " toUrlValue: " + me.latLng.toUrlValue());
 
             var speedMph, mph2MpsConvFactor, updHz, geomFactor, radius;
@@ -50,10 +56,10 @@ spa.map = (function () {
             geomFactor = (2 / 1.414);
             radius = speedMph * mph2MpsConvFactor * updHz * geomFactor;
 
-            if (c !== undefined) {
-                c.setMap(null);
+            if (gCircle !== undefined) {
+                gCircle.setMap(null);
             }
-            c = new google.maps.Circle({
+            gCircle = new google.maps.Circle({
                 center: me.latLng,
                 radius: radius,
                 strokeColor: "#0000FF",
@@ -62,7 +68,10 @@ spa.map = (function () {
                 fillColor: "#0000FF",
                 fillOpacity: 0.2
             });
-            c.setMap(map);
+            gCircle.setMap(gmap);
+            stateMap.gmap_lat = me.latLng.lat();
+            stateMap.gmap_lon = me.latLng.lng();
+
         });
     };
 
@@ -99,16 +108,27 @@ spa.map = (function () {
 
     initMap = function () {
         console.log('spa.map initMap');
-        showMap();
-        stateMap.map_init_bool = true;
+        stateMap.gmap_init_bool = true;
 
     };
+
+    pollGmapInit = function () {
+        if (!stateMap.gmap_init_bool) {
+            setTimeout(pollGmapInit, 0);
+        } else {
+            showMap();
+        }
+    }
 
     show = function () {
         console.log('spa.map show');
         stateMap.$append_target.html(configMap.main_html);
-        if (stateMap.map_init_bool) {
+        if (stateMap.gmap_init_bool) {
+            console.log('spa.map show event="gmap init prior"');
             showMap();
+        } else {
+            console.log('spa.map show event="waiting for gmap init"');
+            pollGmapInit();
         }
 
     };

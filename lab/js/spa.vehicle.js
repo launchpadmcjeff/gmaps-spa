@@ -62,7 +62,7 @@ spa.vehicle = (function () {
 
 
     initModule = function ($append_target) {
-        console.log('spa.driver initModule - $append_target=' + $append_target);
+        console.log('spa.vehicle initModule - $append_target=' + $append_target);
         stateMap.$append_target = $append_target;
         setJqueryMap();
 
