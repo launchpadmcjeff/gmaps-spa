@@ -17,14 +17,12 @@
 var testOne, testTwo;
 
 testOne = function (test_obj) {
-  var idx = 0;
   test_obj.expect(0);
   test_obj.done();
 };
 
 
 testTwo = function (test_obj) {
-  var idx = 1;
   test_obj.expect(0);
   test_obj.done();
 };

@@ -51,9 +51,9 @@ spa.driver = (function () {
             $append_target: null
         },
         jqueryMap = {
-           
+
         },
-        initModule, configModule, setJqueryMap, handleResize;
+        initModule, configModule, setJqueryMap, handleResize, show;
 
     setJqueryMap = function () {
         var
@@ -66,7 +66,6 @@ spa.driver = (function () {
     };
 
     initModule = function ($append_target) {
-        $append_target.append(configMap.main_html);
         stateMap.$append_target = $append_target;
         setJqueryMap();
 
@@ -86,10 +85,15 @@ spa.driver = (function () {
         return true;
     };
 
+    show = function () {
+        stateMap.$append_target.html(configMap.main_html);
+    };
+
     return {
         configModule: configModule,
         initModule: initModule,
-        handleResize: handleResize
+        handleResize: handleResize,
+        show: show
     };
 
 }());

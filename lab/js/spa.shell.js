@@ -16,7 +16,7 @@ spa.shell = (function () {
   var
     configMap = {
       anchor_schema_map: {
-        page: { driver: true, vehicle: true }
+        content: { driver: true, vehicle: true }
       },
       resize_interval: 200,
       main_html: String()
@@ -29,13 +29,13 @@ spa.shell = (function () {
       + '</div>'
       + '<div class="spa-shell-main">'
       + '  <div class="spa-shell-main-nav">'
-      + '        <div class="spa-shell-main-nav-link"><a href="#home">Home</a></div>'
-      + '        <div class="spa-shell-main-nav-link"><a href="#about">About</a></div>'
-      + '        <div class="spa-shell-main-nav-link"><a href="#contact">Contact</a></div>'
-      + '        <div class="spa-shell-main-nav-link"><a href="#login">Login</a></div>'
-      + '        <div class="spa-shell-main-nav-link"><a href="#driver">Driver</a></div>'
-      + '        <div class="spa-shell-main-nav-link"><a href="#vehicle">Vehicle</a></div>'
-      + '        <div class="spa-shell-main-nav-link"><a href="#map">Map</a></div>'
+      + '        <div class="spa-shell-main-nav-link"><a href="#!content=home">Home</a></div>'
+      + '        <div class="spa-shell-main-nav-link"><a href="#!content=about">About</a></div>'
+      + '        <div class="spa-shell-main-nav-link"><a href="#!content=contact">Contact</a></div>'
+      + '        <div class="spa-shell-main-nav-link"><a href="#!content=login">Login</a></div>'
+      + '        <div class="spa-shell-main-nav-link"><a href="#!content=driver">Driver</a></div>'
+      + '        <div class="spa-shell-main-nav-link"><a href="#!content=vehicle">Vehicle</a></div>'
+      + '        <div class="spa-shell-main-nav-link"><a href="#!content=map">Map</a></div>'
       + '  </div>'
       + '  <div class="spa-shell-main-content"></div>'
       + '</div>'
@@ -51,7 +51,7 @@ spa.shell = (function () {
     },
     jqueryMap = {},
 
-    setChatAnchor, copyAnchorMap, setJqueryMap,
+    setContentAnchor, copyAnchorMap, setJqueryMap,
     changeAnchorPart, onHashchange, onResize,
     initModule, onTapAcct, onLogin, onLogout;
   //----------------- END MODULE SCOPE VARIABLES ---------------
@@ -70,7 +70,8 @@ spa.shell = (function () {
     jqueryMap = {
       $container: $container,
       $acct: $container.find('.spa-shell-head-acct'),
-      $nav: $container.find('.spa-shell-main-nav')
+      $nav: $container.find('.spa-shell-main-nav'),
+      $main_content: $container.find('.spa-shell-main-content')
     };
   };
   // End DOM method /setJqueryMap/
@@ -154,57 +155,44 @@ spa.shell = (function () {
   //     differs from existing and is allowed by anchor schema
   //
   onHashchange = function (event) {
-    var
-      _s_chat_previous, _s_chat_proposed, s_chat_proposed,
-      anchor_map_proposed,
-      is_ok = true,
-      anchor_map_previous = copyAnchorMap();
+    var anchor_map_prior, anchor_map_proposed;
+    anchor_map_prior = copyAnchorMap();
 
-    console.log('spa.shell onHashchange event=' + event);
+    console.log('spa.shell onHashchange event=');
+    console.log(event);
+
     // attempt to parse anchor
     try { anchor_map_proposed = $.uriAnchor.makeAnchorMap(); }
     catch (error) {
-      $.uriAnchor.setAnchor(anchor_map_previous, null, true);
+      console.log('spa.shell onHashchange  message=makeAnchorMap_failed error=');
+      console.log(error);
+      $.uriAnchor.setAnchor(anchor_map_prior, null, true);
       return false;
     }
+    console.log('spa.shell onHashchange anchor_map_prior=');
+    console.log(anchor_map_prior);
+    console.log('spa.shell onHashchange anchor_map_proposed=');
+    console.log(anchor_map_proposed);
+
+    switch (anchor_map_proposed.content) {
+      case 'driver':
+        console.log('spa.shell onHashchange event=driver');
+        spa.driver.show();
+        break;
+      case 'vehicle':
+        console.log('spa.shell onHashchange event=vehicle');
+        spa.vehicle.show();
+        break;
+      case 'map':
+        console.log('spa.shell onHashchange event=map');
+        spa.map.show();
+        break;
+      default:
+        console.log('spa.shell onHashchange event="unhandled_api"');
+    }
+
+
     stateMap.anchor_map = anchor_map_proposed;
-
-    // convenience vars
-    _s_chat_previous = anchor_map_previous._s_chat;
-    _s_chat_proposed = anchor_map_proposed._s_chat;
-
-    // Begin adjust chat component if changed
-    if (!anchor_map_previous
-      || _s_chat_previous !== _s_chat_proposed
-    ) {
-      s_chat_proposed = anchor_map_proposed.chat;
-      switch (s_chat_proposed) {
-        case 'opened':
-          is_ok = spa.chat.setSliderPosition('opened');
-          break;
-        case 'closed':
-          is_ok = spa.chat.setSliderPosition('closed');
-          break;
-        default:
-          spa.chat.setSliderPosition('closed');
-          delete anchor_map_proposed.chat;
-          $.uriAnchor.setAnchor(anchor_map_proposed, null, true);
-      }
-    }
-    // End adjust chat component if changed
-
-    // Begin revert anchor if slider change denied
-    if (!is_ok) {
-      if (anchor_map_previous) {
-        $.uriAnchor.setAnchor(anchor_map_previous, null, true);
-        stateMap.anchor_map = anchor_map_previous;
-      }
-      else {
-        delete anchor_map_proposed.chat;
-        $.uriAnchor.setAnchor(anchor_map_proposed, null, true);
-      }
-    }
-    // End revert anchor if slider change denied
 
     return false;
   };
@@ -242,23 +230,23 @@ spa.shell = (function () {
   //-------------------- END EVENT HANDLERS --------------------
 
   //---------------------- BEGIN CALLBACKS ---------------------
-  // Begin callback method /setChatAnchor/
-  // Example  : setChatAnchor( 'closed' );
-  // Purpose  : Change the chat component of the anchor
+  // Begin callback method /setConentAnchor/
+  // Example  : setContentAnchor( 'vehicle' );
+  // Purpose  : Change the ccontent component of the anchor
   // Arguments:
-  //   * position_type - may be 'closed' or 'opened'
+  //   * content_type - may be 'vehicle' or 'driver'
   // Action   :
-  //   Changes the URI anchor parameter 'chat' to the requested
+  //   Changes the URI anchor parameter 'content' to the requested
   //   value if possible.
   // Returns  :
   //   * true  - requested anchor part was updated
   //   * false - requested anchor part was not updated
   // Throws   : none
   //
-  setChatAnchor = function (position_type) {
-    return changeAnchorPart({ chat: position_type });
+  setContentAnchor = function (content_type) {
+    return changeAnchorPart({ content: content_type });
   };
-  // End callback method /setChatAnchor/
+  // End callback method /setContentAnchor/
   //----------------------- END CALLBACKS ----------------------
 
   //------------------- BEGIN PUBLIC METHODS -------------------
@@ -293,8 +281,17 @@ spa.shell = (function () {
     spa.driver.configModule({
 
     });
-    spa.driver.initModule($('.spa-shell-main-content'));
+    spa.driver.initModule(jqueryMap.$main_content);
 
+    spa.vehicle.configModule({
+
+    });
+    spa.vehicle.initModule(jqueryMap.$main_content);
+
+    spa.map.configModule({
+
+    });
+    spa.map.initModule(jqueryMap.$main_content);
     // Handle URI anchor change events.
     // This is done /after/ all feature modules are configured
     // and initialized, otherwise they will not be ready to handle

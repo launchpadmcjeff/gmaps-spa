@@ -15,31 +15,28 @@
 spa.vehicle = (function () {
     var configMap = {
         main_html: String()
-        + '<div id="driver-content" class="container">'
-        + '    <h2>Register Driver</h2>'
+        + '<div id="vehicle-content" class="container">'
+        + '    <h2>Register Vehicle</h2>'
         + '    <hr>'
-        + '  <form class="form-horizontal">'
-        + '    <div class="form-group">'
-        + '        <label for="fieldName">Name:</label>'
-        + '        <input class="form-control" id="fieldName" type="text">'
-        + '    </div>'
-        + '    <div class="form-group">'
-        + '        <label for="fieldEmail">Email address:</label>'
-        + '        <input class="form-control" id="fieldEmail" type="email">'
-        + '    </div>'
-        + '    <div class="form-group">'
-        + '        <label for="pwd">Password:</label>'
-        + '        <input class="form-control" id="pwd" type="password">'
-        + '    </div>'
-        + '    <div class="checkbox">'
-        + '        <label><input type="checkbox">Can see</label>'
-        + '    </div>'
-        + '    <div class="form-group">'
-        + '        <label for="comment">Comment:</label>'
-        + '        <textarea class="form-control" rows="5" id="comment"></textarea>'
-        + '    </div>'
-        + '    <button type="submit" class="btn btn-default btn-success">Submit</button>'
-        + '  </form>'
+        + '    <form class="form-horizontal">'
+        + '        <div class="form-group">'
+        + '            <label for="fieldName">Name:</label>'
+        + '            <input class="form-control" id="fieldName" type="text">'
+        + '        </div>'
+        + '        <div class="form-group">'
+        + '            <label for="fieldYear">Year:</label>'
+        + '            <input class="form-control" id="fieldYear" type="text">'
+        + '        </div>'
+        + '        <div class="form-group">'
+        + '            <label for="fieldMake">Make:</label>'
+        + '            <input class="form-control" id="fieldMake" type="text">'
+        + '        </div>'
+        + '        <div class="form-group">'
+        + '            <label for="fieldModel">Model:</label>'
+        + '            <input class="form-control" id="fieldModel" type="text">'
+        + '        </div>'
+        + '        <button type="submit" class="btn btn-default btn-success">Submit</button>'
+        + '    </form>'
         + '</div>',
 
         settable_map: {
@@ -51,7 +48,7 @@ spa.vehicle = (function () {
             $append_target: null
         },
         jqueryMap = {},
-        initModule, configModule, setJqueryMap;
+        initModule, configModule, setJqueryMap, show;
 
     setJqueryMap = function () {
         var
@@ -63,8 +60,9 @@ spa.vehicle = (function () {
         console.log('spa.vehicle setJqueryMap new=' + jqueryMap);
     };
 
+
     initModule = function ($append_target) {
-        $append_target.append(configMap.main_html);
+        console.log('spa.driver initModule - $append_target=' + $append_target);
         stateMap.$append_target = $append_target;
         setJqueryMap();
 
@@ -80,9 +78,14 @@ spa.vehicle = (function () {
         return true;
     };
 
+    show = function () {
+        stateMap.$append_target.html(configMap.main_html);
+    };
+
     return {
         configModule: configModule,
-        initModule: initModule
+        initModule: initModule,
+        show: show
     };
 
 }());
