@@ -1,0 +1,26 @@
+version: 0.2
+env:
+  variables:
+    key: "value"
+    key: "value"
+phases:
+  install:
+    commands:
+      - echo install phase...started on `date`
+  pre_build:
+    commands:
+      - echo pre_build phase...started on `date`
+      - jslint js/*.js
+  build:
+    commands:
+      - echo build phase...started on `date`
+      - npm test
+  post_build:
+    commands:
+      - echo post_build phase...started on `date`
+artifacts:
+  files:
+    - css/*
+    - js/*
+    - spa.html
+  discard-paths: no
