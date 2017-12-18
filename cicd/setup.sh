@@ -38,16 +38,14 @@ function install {
 	aws cloudformation create-stack --region $1  --stack-name ${STACK_NAME}-roles \
 		--template-body file://service-roles-template.json --capabilities CAPABILITY_IAM
 
+    getBooleanHssOrDie "Say y when the ${STACK_NAME}-roles stack is complete..."
+
 	aws cloudformation create-stack --region $1  --stack-name ${STACK_NAME}-codebuild \
 		--template-body file://codebuild-template.json
 
-	aws cloudformation create-stack --region $1  --stack-name ${STACK_NAME}-codedeploy \
-		--template-body file://codedeploy-template.json 
-
-
 	while :
 	do
-		getBooleanHss "Say y when the ${STACK_NAME}-codedeploy stack is complete..."
+		getBooleanHss "Say y when the ${STACK_NAME}-codebuild stack is complete..."
 		if [ $? -eq 0 ]
 		then
 			break
@@ -55,14 +53,18 @@ function install {
 	done
 
 	aws cloudformation create-stack --region $1  --stack-name ${STACK_NAME}-pipeline \
-		--template-body file://pipeline-serverless-template.json \
+        --capabilities CAPABILITY_IAM \
+		--template-body file://pipeline-template.json \
 		--parameters ParameterKey=Email,ParameterValue=launchpadmcjeff@gmail.com
 
 }
 
 
 function uninstall {
+    aws s3 rm s3://${STACK_NAME}-pipeline-$1 --recursive
+
 	aws cloudformation delete-stack --region $1 --stack-name ${STACK_NAME}-pipeline
+
 	while :
 	do
 		getBooleanHss "Say y when the ${STACK_NAME}-pipeline stack is deleted..."
@@ -71,11 +73,14 @@ function uninstall {
 			break
 		fi
 	done
-	aws cloudformation delete-stack --region $1 --stack-name ${STACK_NAME}-codedeploy
 
 	aws cloudformation delete-stack --region $1 --stack-name ${STACK_NAME}-codebuild
 
-	aws s3 rm s3://${STACK_NAME}-codepipeline-$1 --recursive
+    getBooleanHssOrDie "Say y when the ${STACK_NAME}-codebuild stack is deleted..."
+
+    aws cloudformation delete-stack --region $1 --stack-name ${STACK_NAME}-roles
+
+    getBooleanHssOrDie "Say y when the ${STACK_NAME}-roles stack is deleted..."
 }
 
 

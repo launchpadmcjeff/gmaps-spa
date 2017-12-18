@@ -1,7 +1,7 @@
 # gmaps
 
 ## What is it
-An expriment with Google Maps API
+An experiment with Google Maps API
 
 ## Prerequisites
 1. none
@@ -22,3 +22,4 @@ deploy to wildfly
 ## TODO
 * AWS deployment pipeline
 
+https://glazkov.com/2011/01/14/what-the-heck-is-shadow-dom/

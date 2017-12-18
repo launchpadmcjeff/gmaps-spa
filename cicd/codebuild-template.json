@@ -27,6 +27,14 @@
         }
     },
     "Parameters": {
+        "RoleStackName": {
+            "Description": "Name of an active CloudFormation stack that contains the Service Roles.",
+            "Type": "String",
+            "MinLength": 1,
+            "MaxLength": 255,
+            "AllowedPattern": "^[a-zA-Z][-a-zA-Z0-9]*$",
+            "Default": "gmaps-roles"
+        },
         "CodeBuildProjectName": {
             "Description": "The name for this build project. This name must be unique across all of the build projects in your AWS account.",
             "Type": "String",
@@ -40,7 +48,7 @@
             "Type": "String",
             "MinLength": 1,
             "MaxLength": 255,
-            "AllowedPattern": "^[a-zA-Z][-a-zA-Z0-9]*$",
+            "AllowedPattern": ".*",
             "Default": "gmaps-codebuild project description"
         },
         "PathFolder": {
@@ -58,30 +66,38 @@
             "MaxLength": 255,
             "AllowedPattern": "^[a-zA-Z][-a-zA-Z0-9]*$",
             "Default": "gmaps-deployables"
-        },
-        "RoleStackName": {
-            "Description": "Name of an active CloudFormation stack that contains the Service Roles.",
-            "Type": "String",
-            "MinLength": 1,
-            "MaxLength": 255,
-            "AllowedPattern": "^[a-zA-Z][-a-zA-Z0-9]*$",
-            "Default": "gmaps-roles"
         }
     },
     "Resources": {
+        "CodeBuildArtifactLocation": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "BucketName": {
+                    "Fn::Sub": "${AWS::StackName}-codebuild-${AWS::Region}"
+                },
+                "Tags": [
+                    {
+                        "Key": "Purpose",
+                        "Value": "CodeBuildArtifactLocation"
+                    }
+                ]
+            }
+        },
         "CodeBuild": {
             "Type": "AWS::CodeBuild::Project",
             "Properties": {
                 "Artifacts": {
                     "Location": {
-                        "Fn::ImportValue": {
-                            "Fn::Sub": "${VpcStackName}-CodeBuildArtifactLocation"
-                        }
+                        "Ref": "CodeBuildArtifactLocation"
                     },
-                    "Name": {"Ref": "NameFolder"},
+                    "Name": {
+                        "Ref": "NameFolder"
+                    },
                     "NamespaceType": "NONE",
                     "Packaging": "NONE",
-                    "Path": {"Ref": "PathFolder"},
+                    "Path": {
+                        "Ref": "PathFolder"
+                    },
                     "Type": "S3"
                 },
                 "Description": {

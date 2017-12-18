@@ -1,12 +1,13 @@
 version: 0.2
 env:
   variables:
-    key: "value"
-    key: "value"
+    key: "aws"
+    key: "serverless"
 phases:
   install:
     commands:
       - echo install phase...started on `date`
+      - npm install jslint
   pre_build:
     commands:
       - echo pre_build phase...started on `date`

@@ -35,7 +35,7 @@ spa.vehicle = (function () {
         + '            <label for="fieldModel">Model:</label>'
         + '            <input class="form-control" id="fieldModel" type="text">'
         + '        </div>'
-        + '        <button type="submit" class="btn btn-default btn-success">Submit</button>'
+        + '        <button type="submit" id="submit" class="btn btn-default btn-success">Submit</button>'
         + '    </form>'
         + '</div>',
 
@@ -80,6 +80,8 @@ spa.vehicle = (function () {
 
     show = function () {
         stateMap.$append_target.html(configMap.main_html);
+
+        $("#submit").click(spa.data.getBuf);
     };
 
     return {
