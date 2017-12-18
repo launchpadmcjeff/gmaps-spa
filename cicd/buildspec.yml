@@ -25,4 +25,6 @@ artifacts:
     - css/*
     - js/*
     - spa.html
+    - index.html
+    - error.html
   discard-paths: no
