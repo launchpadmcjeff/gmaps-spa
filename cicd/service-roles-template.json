@@ -230,21 +230,10 @@
                                     ]
                                 },
                                 {
-                                    "Sid": "S3GetObjectPolicy",
+                                    "Sid": "S3All",
                                     "Effect": "Allow",
                                     "Action": [
-                                        "s3:GetObject",
-                                        "s3:GetObjectVersion"
-                                    ],
-                                    "Resource": [
-                                        "*"
-                                    ]
-                                },
-                                {
-                                    "Sid": "S3PutObjectPolicy",
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "s3:PutObject"
+                                        "s3:*"
                                     ],
                                     "Resource": [
                                         "*"
