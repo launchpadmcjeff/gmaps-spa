@@ -310,6 +310,11 @@ spa.shell = (function () {
   // End PUBLIC method /initModule/
 
 
-  return { initModule: initModule };
+  return {
+    initModule: initModule,
+    onLogin: onLogin,
+    onLogout: onLogout,
+    setConentAnchor: setContentAnchor
+  };
   //------------------- END PUBLIC METHODS ---------------------
 }());

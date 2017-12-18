@@ -33,13 +33,13 @@ spa.data = (function () {
         // $("<div class=\"content\">").html(json.html).appendTo("body");
       })
       .fail(function (xhr, status, errorThrown) {
-        alert("Sorry, there was a problem!");
+        console.log("Sorry, there was a problem!");
         console.log("Error: " + errorThrown);
         console.log("Status: " + status);
         console.dir(xhr);
       })
       .always(function (xhr, status) {
-        alert("The request is complete!");
+        console.log("The request is complete!" + xhr + ' status: ' + status);
       });
 
 

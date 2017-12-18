@@ -10,7 +10,7 @@
   white  : true
 */
 
-/*global $, spa */
+/*global $, spa, google */
 
 spa.map = (function () {
 
@@ -118,7 +118,7 @@ spa.map = (function () {
         } else {
             showMap();
         }
-    }
+    };
 
     show = function () {
         console.log('spa.map show');
