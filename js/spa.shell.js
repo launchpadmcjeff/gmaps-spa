@@ -314,7 +314,7 @@ spa.shell = (function () {
     initModule: initModule,
     onLogin: onLogin,
     onLogout: onLogout,
-    setConentAnchor: setContentAnchor
+    setContentAnchor: setContentAnchor
   };
   //------------------- END PUBLIC METHODS ---------------------
 }());

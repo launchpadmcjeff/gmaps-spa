@@ -30,6 +30,9 @@ function getBooleanHssOrDie {
 }
 
 function install {
+	aws s3 mb s3://robowebi.com --region $1
+    aws s3 website s3://robowebi.com --region $1 --index-document index.html --error-document error.html
+
 	aws cloudformation create-stack --region $1  --stack-name ${STACK_NAME}-codecommit \
 		--template-body file://codecommit-template.json
 	
