@@ -28,6 +28,6 @@ artifacts:
     - spa.html
     - index.html
     - error.html
-    - cicd/packaged-template.yaml
+    - cicd/gmaps-test-packaged-template.yaml
     - cicd/gmaps-test-config.json
   discard-paths: no
