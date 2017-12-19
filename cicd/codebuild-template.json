@@ -73,7 +73,7 @@
             "Type": "AWS::S3::Bucket",
             "Properties": {
                 "BucketName": {
-                    "Fn::Sub": "${AWS::StackName}-codebuild-${AWS::Region}"
+                    "Fn::Sub": "${AWS::StackName}-bucket-${AWS::Region}"
                 },
                 "Tags": [
                     {

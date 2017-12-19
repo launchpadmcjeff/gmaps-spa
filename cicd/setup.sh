@@ -67,7 +67,7 @@ function install {
 function uninstall {
     aws s3 rm s3://${STACK_NAME}-pipeline-$1 --recursive
 
-	aws cloudformation delete-stack --region $1 --stack-name ${STACK_NAME}-pipeline
+    aws cloudformation delete-stack --region $1 --stack-name ${STACK_NAME}-pipeline
 
 	while :
 	do
@@ -78,6 +78,7 @@ function uninstall {
 		fi
 	done
 
+    aws s3 rm s3://${STACK_NAME}-codebuild-bucket-$1 --recursive
 	aws cloudformation delete-stack --region $1 --stack-name ${STACK_NAME}-codebuild
 
     getBooleanHssOrDie "Say y when the ${STACK_NAME}-codebuild stack is deleted..."

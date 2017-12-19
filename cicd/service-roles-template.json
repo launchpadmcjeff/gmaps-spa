@@ -269,7 +269,7 @@
             },
             "Export": {
                 "Name": {
-                    "Fn::Sub": "${AWS::StackName}-CloudFormationRole"
+                    "Fn::Sub": "${AWS::StackName}-CloudFormationRoleArn"
                 }
             }
         },
@@ -283,7 +283,7 @@
             },
             "Export": {
                 "Name": {
-                    "Fn::Sub": "${AWS::StackName}-CodePipelineRole"
+                    "Fn::Sub": "${AWS::StackName}-CodePipelineRoleArn"
                 }
             }
         }

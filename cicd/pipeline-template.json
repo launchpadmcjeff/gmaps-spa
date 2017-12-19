@@ -2,6 +2,14 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "The CodePipeline Stack.  It builds the infrastructure to get to production.",
     "Parameters": {
+        "RoleStackName": {
+            "Description": "Name of an active CloudFormation stack that contains the Service Roles.",
+            "Type": "String",
+            "MinLength": 1,
+            "MaxLength": 255,
+            "AllowedPattern": "^[a-zA-Z][-a-zA-Z0-9]*$",
+            "Default": "gmaps-roles"
+        },
         "GitBranch": {
             "Description": "Git branch to use for builds.",
             "Type": "String",
@@ -167,40 +175,46 @@
                         ]
                     },
                     {
-                        "Name": "CreateTestStack",
-                        "ActionTypeId": {
-                            "Category": "Deploy",
-                            "Owner": "AWS",
-                            "Provider": "CloudFormation",
-                            "Version": "1"
-                        },
-                        "InputArtifacts": [
+                        "Name": "TestDeploy",
+                        "Actions": [
                             {
-                                "Name": "Source01"
-                            },
-                            {
-                                "Name": "Build01"
+                                "Name": "CreateTestStack",
+                                "ActionTypeId": {
+                                    "Category": "Deploy",
+                                    "Owner": "AWS",
+                                    "Provider": "CloudFormation",
+                                    "Version": "1"
+                                },
+                                "InputArtifacts": [
+                                    {
+                                        "Name": "Source01"
+                                    },
+                                    {
+                                        "Name": "Build01"
+                                    }
+                                ],
+                                "Configuration": {
+                                    "ActionMode": "REPLACE_ON_FAILURE",
+                                    "RoleArn": {
+                                        "Fn::GetAtt": [
+                                            "CodePipelineRole",
+                                            "Arn"
+                                        ]
+                                    },
+                                    "Capabilities": "CAPABILITY_NAMED_IAM",
+                                    "StackName": {
+                                        "Ref": "TestStackName"
+                                    },
+                                    "TemplateConfiguration": {
+                                        "Fn::Sub": "Build01::${TestStackConfig}"
+                                    },
+                                    "TemplatePath": {
+                                        "Fn::Sub": "Build01::${TestStackTemplate}"
+                                    }
+                                },
+                                "RunOrder": 20
                             }
-                        ],
-                        "Configuration": {
-                            "ActionMode": "REPLACE_ON_FAILURE",
-                            "RoleArn": {
-                                "Fn::ImportValue": {
-                                    "Fn::Sub": "${RoleStackName}-CloudFormationRole"
-                                }
-                            },
-                            "Capabilities": "CAPABILITY_NAMED_IAM",
-                            "StackName": {
-                                "Ref": "TestStackName"
-                            },
-                            "TemplateConfiguration": {
-                                "Fn::Sub": "Build01::${TestStackConfig}"
-                            },
-                            "TemplatePath": {
-                                "Fn::Sub": "Build01::${TestStackTemplate}"
-                            }
-                        },
-                        "RunOrder": 20
+                        ]
                     }
                 ]
             }
