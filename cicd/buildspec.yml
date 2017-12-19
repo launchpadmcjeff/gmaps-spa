@@ -20,6 +20,7 @@ phases:
     commands:
       - echo post_build phase...started on `date`
       - aws s3 sync --acl public-read --exclude '*' --include 'css/*' --include 'js/*' --include '*.html' . s3://www.robowebi.com --delete
+      - aws cloudformation package --template-file cicd/gmaps-test-template.yaml --s3-bucket gmaps-codebuild-codebuild-us-west-1 --output-template-file cicd/gmaps-test-packaged-template.yaml
 artifacts:
   files:
     - css/*
@@ -27,4 +28,6 @@ artifacts:
     - spa.html
     - index.html
     - error.html
+    - cicd/packaged-template.yaml
+    - cicd/gmaps-test-config.json
   discard-paths: no

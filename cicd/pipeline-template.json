@@ -26,6 +26,21 @@
         "Email": {
             "Description": "The email address where CodePipeline sends pipeline notifications",
             "Type": "String"
+        },
+        "TestStackName": {
+            "Default": "gmaps-test",
+            "Description": "A name for the test stack",
+            "Type": "String"
+        },
+        "TestStackTemplate": {
+            "Default": "cicd/gmaps-test-packaged-template.yaml",
+            "Description": "The file name of the test template",
+            "Type": "String"
+        },
+        "TestStackConfig": {
+            "Default": "cicd/gmaps-test-config.json",
+            "Description": "The configuration file name for the test stack",
+            "Type": "String"
         }
     },
     "Metadata": {
@@ -147,9 +162,45 @@
                                         "Name": "Build01"
                                     }
                                 ],
-                                "RunOrder": 1
+                                "RunOrder": 10
                             }
                         ]
+                    },
+                    {
+                        "Name": "CreateTestStack",
+                        "ActionTypeId": {
+                            "Category": "Deploy",
+                            "Owner": "AWS",
+                            "Provider": "CloudFormation",
+                            "Version": "1"
+                        },
+                        "InputArtifacts": [
+                            {
+                                "Name": "Source01"
+                            },
+                            {
+                                "Name": "Build01"
+                            }
+                        ],
+                        "Configuration": {
+                            "ActionMode": "REPLACE_ON_FAILURE",
+                            "RoleArn": {
+                                "Fn::ImportValue": {
+                                    "Fn::Sub": "${RoleStackName}-CloudFormationRole"
+                                }
+                            },
+                            "Capabilities": "CAPABILITY_NAMED_IAM",
+                            "StackName": {
+                                "Ref": "TestStackName"
+                            },
+                            "TemplateConfiguration": {
+                                "Fn::Sub": "Build01::${TestStackConfig}"
+                            },
+                            "TemplatePath": {
+                                "Fn::Sub": "Build01::${TestStackTemplate}"
+                            }
+                        },
+                        "RunOrder": 20
                     }
                 ]
             }
