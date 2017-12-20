@@ -7,27 +7,17 @@ phases:
   install:
     commands:
       - echo install phase...started on `date`
-      - npm install
   pre_build:
     commands:
       - echo pre_build phase...started on `date`
-      - node_modules/jslint/bin/jslint.js js/*.js
   build:
     commands:
       - echo build phase...started on `date`
-      - npm test
   post_build:
     commands:
       - echo post_build phase...started on `date`
-      - aws s3 sync --acl public-read --exclude '*' --include 'css/*' --include 'js/*' --include '*.html' . s3://www.robowebi.com --delete
-      - aws cloudformation package --template-file cicd/gmaps-test-template.yaml --s3-bucket gmaps-codebuild-bucket-us-west-1 --output-template-file cicd/gmaps-test-packaged-template.yaml
+      - aws s3 sync --acl public-read --exclude '*' --include 'css/*' --include 'js/*' --include '*.html' www s3://gmaps-spa-test --delete
 artifacts:
   files:
-    - css/*
-    - js/*
-    - spa.html
-    - index.html
-    - error.html
-    - cicd/gmaps-test-packaged-template.yaml
-    - cicd/gmaps-test-config.json
+    - www/*
   discard-paths: no

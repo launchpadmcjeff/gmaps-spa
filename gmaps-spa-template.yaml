@@ -8,11 +8,11 @@ Parameters:
   GitHubUser:
     Type: String
     Description: GitHub User
-    Default: "stelligent"
+    Default: "launchpadmcjeff"
   GitHubRepo:
     Type: String
     Description: GitHub Repo to pull from. Only the Name. not the URL
-    Default: "devops-essentials"
+    Default: "gmaps"
   GitHubBranch:
     Type: String
     Description: GitHub Branch
@@ -155,17 +155,7 @@ Resources:
         Image: !Sub ${BuildImage}
       Source:
         Type: CODEPIPELINE
-        BuildSpec: !Sub |
-          version: 0.1
-          phases:
-            post_build:
-              commands:
-                - aws s3 cp --recursive --acl public-read ./samples s3://${SiteBucketName}/samples 
-                - aws s3 cp --recursive --acl public-read ./html s3://${SiteBucketName}/ 
-          artifacts:
-            type: zip
-            files:
-              - ./html/index.html
+        BuildSpec: cicd/buildspec.yml
       TimeoutInMinutes: 10
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
