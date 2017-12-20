@@ -23,7 +23,7 @@ spa.data = (function () {
 
     $.ajax({
       contentType: "application/json",
-      url: "https://ql6ak84d5c.execute-api.us-west-1.amazonaws.com/Prod/resource/buf",
+      url: "https://8si6i4i8vd.execute-api.us-west-1.amazonaws.com/Prod/time",
       type: "GET",
       dataType: "json"
     })
