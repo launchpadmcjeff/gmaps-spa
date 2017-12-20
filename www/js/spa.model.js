@@ -13,8 +13,8 @@
 /*global $, spa */
 
 spa.model = (function () {
-  var initModule = function ($container) {
-    console.log('spa.model initModule - $container=' + $container);
+  var initModule = function () {
+    console.log('spa.model initModule');
   };
 
   return {
