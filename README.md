@@ -12,7 +12,7 @@ An experiment with Google Maps API
 
 ## Running
 You must have the aws cli installed; try 'pip install aws'.  After that, just run
-cloudformation create-stack --template file://gmaps-spa.template
+aws cloudformation create-stack --region us-west-1 --stack-name gmaps-spa --capabilities CAPABILITY_IAM --template-body file://gmaps-spa-template.yaml
 
 ## TODO
 * AWS deployment pipeline
