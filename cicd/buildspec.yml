@@ -1,0 +1,23 @@
+version: 0.2
+env:
+  variables:
+    key: "aws"
+    key: "serverless"
+phases:
+  install:
+    commands:
+      - echo install phase...started on `date`
+  pre_build:
+    commands:
+      - echo pre_build phase...started on `date`
+  build:
+    commands:
+      - echo build phase...started on `date`
+  post_build:
+    commands:
+      - echo post_build phase...started on `date`
+      - aws s3 sync --acl public-read --exclude '*' --include 'css/*' --include 'js/*' --include '*.html' www s3://gmaps-spa-test --delete
+artifacts:
+  files:
+    - www/*
+  discard-paths: no

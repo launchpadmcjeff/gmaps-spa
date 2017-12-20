@@ -1,0 +1,9 @@
+{
+    "name": "GMAPS",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "socket.io": "0.9.x",
+        "jslint": "0.11.x"
+    }
+}
