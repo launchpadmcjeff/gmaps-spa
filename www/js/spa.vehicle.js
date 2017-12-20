@@ -59,7 +59,8 @@ spa.vehicle = (function () {
         console.log('spa.vehicle setJqueryMap old=' + jqueryMap);
         jqueryMap = {
             $append_target: $append_target,
-            $driver_table: $append_target.find('.driver-table')
+            $driver_table: $append_target.find('.driver-table'),
+            $submit: $append_target.find('#submit')
         };
         console.log('spa.vehicle setJqueryMap new=' + jqueryMap);
     };
@@ -75,15 +76,9 @@ spa.vehicle = (function () {
     };
 
     initModule = function ($append_target) {
-        var $driver_table;
-        
         console.log('spa.vehicle initModule - $append_target=' + $append_target);
         stateMap.$append_target = $append_target;
         setJqueryMap();
-
-
-        $driver_table = jqueryMap.$driver_table;
-        $.gevent.subscribe($driver_table, 'addVehicle', onAddVehicle);
 
         return true;
     };
@@ -99,9 +94,12 @@ spa.vehicle = (function () {
 
     show = function () {
         stateMap.$append_target.html(configMap.main_html);
+        setJqueryMap();
 
-        $("#submit").click(spa.data.getBuf);
-        $("#submit").click(spa.model.vehicles.addVehicle);
+        $.gevent.subscribe(jqueryMap.$driver_table, 'addVehicle', onAddVehicle);
+
+        jqueryMap.$submit.click(spa.data.getBuf);
+        jqueryMap.$submit.click(spa.model.vehicles.addVehicle);
     };
 
     return {
