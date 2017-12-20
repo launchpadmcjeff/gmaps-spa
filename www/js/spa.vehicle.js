@@ -13,36 +13,38 @@
 /*global $, spa */
 
 spa.vehicle = (function () {
-    var configMap = {
-        main_html: String()
-        + '<div id="vehicle-content" class="container">'
-        + '    <h2>Register Vehicle</h2>'
-        + '    <hr>'
-        + '    <form class="form-horizontal">'
-        + '        <div class="form-group">'
-        + '            <label for="fieldName">Name:</label>'
-        + '            <input class="form-control" id="fieldName" type="text">'
-        + '        </div>'
-        + '        <div class="form-group">'
-        + '            <label for="fieldYear">Year:</label>'
-        + '            <input class="form-control" id="fieldYear" type="text">'
-        + '        </div>'
-        + '        <div class="form-group">'
-        + '            <label for="fieldMake">Make:</label>'
-        + '            <input class="form-control" id="fieldMake" type="text">'
-        + '        </div>'
-        + '        <div class="form-group">'
-        + '            <label for="fieldModel">Model:</label>'
-        + '            <input class="form-control" id="fieldModel" type="text">'
-        + '        </div>'
-        + '        <button type="submit" id="submit" class="btn btn-default btn-success">Submit</button>'
-        + '    </form>'
-        + '</div>',
+    var onAddVehicle,
+        configMap = {
+            main_html: String()
+            + '<div id="vehicle-content" class="container">'
+            + '    <h2>Register Vehicle</h2>'
+            + '    <hr>'
+            + '    <form class="form-horizontal">'
+            + '        <div class="form-group">'
+            + '            <label for="fieldName">Name:</label>'
+            + '            <input class="form-control" id="fieldName" type="text">'
+            + '        </div>'
+            + '        <div class="form-group">'
+            + '            <label for="fieldYear">Year:</label>'
+            + '            <input class="form-control" id="fieldYear" type="text">'
+            + '        </div>'
+            + '        <div class="form-group">'
+            + '            <label for="fieldMake">Make:</label>'
+            + '            <input class="form-control" id="fieldMake" type="text">'
+            + '        </div>'
+            + '        <div class="form-group">'
+            + '            <label for="fieldModel">Model:</label>'
+            + '            <input class="form-control" id="fieldModel" type="text">'
+            + '        </div>'
+            + '        <button type="submit" id="submit" class="btn btn-default btn-success">Submit</button>'
+            + '    </form>'
+            + '    <div class="driver-table"></div>'
+            + '</div>',
 
-        settable_map: {
+            settable_map: {
 
-        }
-    },
+            }
+        },
 
         stateMap = {
             $append_target: null
@@ -53,18 +55,35 @@ spa.vehicle = (function () {
     setJqueryMap = function () {
         var
             $append_target = stateMap.$append_target;
+
         console.log('spa.vehicle setJqueryMap old=' + jqueryMap);
         jqueryMap = {
-            $append_target: $append_target
+            $append_target: $append_target,
+            $driver_table: $append_target.find('.driver-table')
         };
         console.log('spa.vehicle setJqueryMap new=' + jqueryMap);
     };
 
+    onAddVehicle = function (event) {
+        console.log(event);
+        var list_html = String()
+            + '<div class="spa-chat-list-note">'
+            + 'To chat alone is the fate of all great souls...<br><br>'
+            + 'No one is online'
+            + '</div>';
+        jqueryMap.$driver_table.html(list_html);
+    };
 
     initModule = function ($append_target) {
+        var $driver_table;
+        
         console.log('spa.vehicle initModule - $append_target=' + $append_target);
         stateMap.$append_target = $append_target;
         setJqueryMap();
+
+
+        $driver_table = jqueryMap.$driver_table;
+        $.gevent.subscribe($driver_table, 'addVehicle', onAddVehicle);
 
         return true;
     };
