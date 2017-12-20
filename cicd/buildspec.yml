@@ -7,9 +7,12 @@ phases:
   install:
     commands:
       - echo install phase...started on `date`
+      - npm install
   pre_build:
     commands:
       - echo pre_build phase...started on `date`
+      - node_modules/jslint/bin/jslint.js www/js/*.js
+      - npm test
   build:
     commands:
       - echo build phase...started on `date`
