@@ -82,7 +82,7 @@ spa.vehicle = (function () {
         stateMap.$append_target.html(configMap.main_html);
 
         $("#submit").click(spa.data.getBuf);
-        $("#submit").click(spa.model.vehicles.addVehicle());
+        $("#submit").click(spa.model.vehicles.addVehicle);
     };
 
     return {
