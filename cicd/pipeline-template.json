@@ -196,10 +196,9 @@
                                 "Configuration": {
                                     "ActionMode": "REPLACE_ON_FAILURE",
                                     "RoleArn": {
-                                        "Fn::GetAtt": [
-                                            "CodePipelineRole",
-                                            "Arn"
-                                        ]
+                                        "Fn::ImportValue": {
+                                            "Fn::Sub": "${RoleStackName}-CloudFormationRoleArn"
+                                        }
                                     },
                                     "Capabilities": "CAPABILITY_NAMED_IAM",
                                     "StackName": {
@@ -352,6 +351,48 @@
                                 }
                             ],
                             "Version": "2012-10-17"
+                        }
+                    }
+                ]
+            }
+        },
+        "CloudFormationRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "cloudformation.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "CloudFormationRole",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "ec2:*",
+                                        "iam:*",
+                                        "elasticloadbalancing:*",
+                                        "autoscaling:*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                }
+                            ]
                         }
                     }
                 ]
