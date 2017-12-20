@@ -1,4 +1,4 @@
-# gmaps
+# gmaps-spa
 
 ## What is it
 An experiment with Google Maps API
@@ -11,13 +11,8 @@ An experiment with Google Maps API
 
 
 ## Running
-clone the repo
-
-```bash
-mvn clean package
-```
-
-deploy to wildfly
+You must have the aws cli installed; try 'pip install aws'.  After that, just run
+cloudformation create-stack --template file://gmaps-spa.template
 
 ## TODO
 * AWS deployment pipeline
