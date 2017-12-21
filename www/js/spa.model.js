@@ -15,7 +15,7 @@
 spa.model = (function () {
   'use strict';
 
-  var initModule, makePerson, vehicles,
+  var initModule, makePerson, vehicles, makeVehicle,
     configMap = { anon_id: 'a0' },
     stateMap = {
       anon_user: null,
@@ -23,7 +23,10 @@ spa.model = (function () {
       is_connected: false,
       people_cid_map: {},
       people_db: TAFFY(),
-      user: null
+      user: null,
+      vehicle_cid_map: {},
+      vehicle_db: TAFFY(),
+      vehicle: null
     },
     personProto = {
       get_is_user: function () {
@@ -32,6 +35,9 @@ spa.model = (function () {
       get_is_anon: function () {
         return this.cid === stateMap.anon_user.cid;
       }
+    },
+    vehicleProto = {
+
     },
     isFakeData = true;
 
@@ -50,6 +56,29 @@ spa.model = (function () {
       addVehicle: addVehicle
     };
   }());
+
+  makeVehicle = function (vehicle_map) {
+    var vehicle,
+      id = vehicle_map.id,
+      cid = vehicle_map.cid,
+      name = vehicle_map.name,
+      year = vehicle_map.year,
+      make = vehicle_map.make,
+      model = vehicle_map.model;
+
+    vehicle = Object.create(vehicleProto);
+    vehicle.cid = cid;
+    vehicle.name = name;
+    vehicle.year = year;
+    vehicle.make = make;
+    vehicle.model = model;
+
+    if (id) { vehicle.id = id; }
+    stateMap.vehicle_cid_map[cid] = vehicle;
+
+    stateMap.vehicle_db.insert(vehicle);
+    return vehicle;
+  };
 
   makePerson = function (person_map) {
     var person,
@@ -86,6 +115,15 @@ spa.model = (function () {
       name: 'anonymous'
     });
     stateMap.user = stateMap.anon_user;
+
+    stateMap.vehicle = makeVehicle({
+      cid: 'a0',
+      id: 'a0',
+      name: '',
+      year: '',
+      make: '',
+      model: ''
+    });
 
   };
 

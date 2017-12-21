@@ -86,8 +86,7 @@ spa.vehicle = (function () {
         console.log('onAddVehicle vehicle=', vehicle);
         var list_html = String()
             + '<div class="spa-chat-list-note">'
-            + 'To chat alone is the fate of all great souls...<br><br>'
-            + 'No one is online'
+            + vehicle.name
             + '</div>';
         jqueryMap.$driver_table.html(list_html);
     };
