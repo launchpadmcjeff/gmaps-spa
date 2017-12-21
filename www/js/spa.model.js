@@ -38,11 +38,12 @@ spa.model = (function () {
   vehicles = (function () {
     var addVehicle;
 
-    addVehicle = function () {
-      $.gevent.publish('addVehicle', { addVehicle: "isFakeData=" + isFakeData });
-      console.log("addVehicle");
+    addVehicle = function (vehicle) {
 
-      
+      console.log("addVehicle vehicle=", vehicle);
+
+
+      $.gevent.publish('addVehicle', vehicle);
     };
 
     return {
@@ -76,6 +77,7 @@ spa.model = (function () {
 
   initModule = function () {
     console.log('spa.model initModule');
+    console.log('spa.model isFakeData=', isFakeData);
 
     // initialize anonymous person
     stateMap.anon_user = makePerson({

@@ -13,7 +13,7 @@
 /*global $, spa */
 
 spa.vehicle = (function () {
-    var onAddVehicle,
+    var onAddVehicle, onSubmit,
         configMap = {
             main_html: String()
             + '<div id="vehicle-content" class="container">'
@@ -59,14 +59,31 @@ spa.vehicle = (function () {
         console.log('spa.vehicle setJqueryMap old=' + jqueryMap);
         jqueryMap = {
             $append_target: $append_target,
-            $driver_table: $append_target.find('.driver-table'),
-            $submit: $append_target.find('#submit')
+            $name_input: $append_target.find('#fieldName'),
+            $year_input: $append_target.find('#fieldYear'),
+            $make_input: $append_target.find('#fieldMake'),
+            $model_input: $append_target.find('#fieldModel'),
+            $submit: $append_target.find('#submit'),
+            $driver_table: $append_target.find('.driver-table')
+
         };
         console.log('spa.vehicle setJqueryMap new=' + jqueryMap);
     };
 
-    onAddVehicle = function (event) {
-        console.log(event);
+    onSubmit = function (event) {
+        console.log('onSubmit', event);
+        spa.model.vehicles.addVehicle({
+            name: jqueryMap.$name_input.val(),
+            year: jqueryMap.$year_input.val(),
+            make: jqueryMap.$make_input.val(),
+            model: jqueryMap.$model_input.val()
+        });
+
+    };
+
+    onAddVehicle = function (event, vehicle) {
+        console.log('onAddVehicle', event);
+        console.log('onAddVehicle vehicle=', vehicle);
         var list_html = String()
             + '<div class="spa-chat-list-note">'
             + 'To chat alone is the fate of all great souls...<br><br>'
@@ -99,7 +116,7 @@ spa.vehicle = (function () {
         $.gevent.subscribe(jqueryMap.$driver_table, 'addVehicle', onAddVehicle);
 
         jqueryMap.$submit.click(spa.data.getBuf);
-        jqueryMap.$submit.click(spa.model.vehicles.addVehicle);
+        jqueryMap.$submit.click(onSubmit);
     };
 
     return {
